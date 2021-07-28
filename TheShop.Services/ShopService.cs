@@ -91,19 +91,8 @@ namespace TheShop
 			article.SoldDate = DateTime.Now;
 			article.BuyerUserId = buyerId;
 
-			try
-			{
-				_articleRepository.Create(article);
-				_logger.Info("Article with external id=" + externalId + " is sold.");
-			}
-			catch (ArgumentNullException ex)
-			{
-				_logger.Error("Could not save article with external id=" + externalId);
-				throw new Exception("Could not save article with external id");
-			}
-			catch (Exception)
-			{
-			}
+			_articleRepository.Create(article);
+			_logger.Info("Article with external id=" + externalId + " is sold.");
 		}
 	}
 }
