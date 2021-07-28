@@ -3,7 +3,6 @@ using Moq;
 using System;
 using System.IO;
 using TheShop.Models.Entities;
-using TheShop.Models.RequestModels;
 using TheShop.Repositories.Interfaces;
 using TheShop.Services.Interfaces;
 using TheShop.UnitTests.Utils.TestData;
@@ -15,12 +14,15 @@ namespace TheShop.UnitTests
 	{
 		private Mock<IArticleRepository> _articleRepository;
 		private Mock<ISupplierApiService> _supplierApiService;
+		private Mock<ILoggerService> _logger;
 
 		[TestInitialize]
 		public void Initialize()
 		{
 			_articleRepository = new Mock<IArticleRepository>();
 			_supplierApiService = new Mock<ISupplierApiService>();
+			_logger = new Mock<ILoggerService>();
+			SetupConsoleLogger();
 		}
 
 		[TestMethod]
@@ -37,7 +39,7 @@ namespace TheShop.UnitTests
 
 			_supplierApiService.Setup(m => m.GetSuppliers()).Returns(() => TestSupplierModels.List());
 
-			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
 			_testedInstance.OrderAndSellArticle(1, 459, 10);
 
@@ -53,7 +55,7 @@ namespace TheShop.UnitTests
 		[ExpectedException(typeof(Exception))]
 		public void OrderAndSellArticle_ErrorNoArticle()
 		{
-			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
 			_testedInstance.OrderAndSellArticle(1, 20, 10);
 		}
@@ -65,7 +67,7 @@ namespace TheShop.UnitTests
 
 			_articleRepository.Setup(m => m.GetById(It.IsAny<int>())).Returns(() => createdArticle);
 
-			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
 			var article = _testedInstance.GetById(2);
 
@@ -82,7 +84,7 @@ namespace TheShop.UnitTests
 
 			_articleRepository.Setup(m => m.GetById(It.IsAny<int>())).Returns(() => existedArticle);
 
-			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
 			var article = _testedInstance.GetById(55);
 
@@ -100,7 +102,7 @@ namespace TheShop.UnitTests
 
 				_articleRepository.Setup(m => m.GetByExternalId(It.IsAny<int>())).Returns(() => createdArticle);
 
-				var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
+				var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
 				_testedInstance.ShowArticleByExternalId(1);
 
@@ -119,12 +121,19 @@ namespace TheShop.UnitTests
 
 				_articleRepository.Setup(m => m.GetByExternalId(It.IsAny<int>())).Returns(() => createdArticle);
 
-				var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
+				var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
 				_testedInstance.ShowArticleByExternalId(1);
 
 				Assert.IsTrue(sw.ToString().Contains("not found"));
 			}
+		}
+
+		private void SetupConsoleLogger()
+		{
+			_logger.Setup(m => m.Debug(It.IsAny<string>())).Callback((string message) => Console.WriteLine("Debug: " + message));
+			_logger.Setup(m => m.Info(It.IsAny<string>())).Callback((string message) => Console.WriteLine("Info: " + message));
+			_logger.Setup(m => m.Error(It.IsAny<string>())).Callback((string message) => Console.WriteLine("Error: " + message));
 		}
 	}
 }
