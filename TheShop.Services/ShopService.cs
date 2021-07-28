@@ -91,14 +91,21 @@ namespace TheShop
 
 		public Article GetById(int id)
 		{
-			var article = _articleRepository.GetById(id);
+			return _articleRepository.GetById(id);
+		}
 
-			if (article == null)
+		public void ShowArticleByExternalId(int externalId)
+		{
+			var articles = _articleRepository.GetByExternalId(externalId);
+
+			if (articles == null)
 			{
-				throw new Exception("Article not found");
+				logger.Info($"Article with external ID \"{externalId}\" not found");
 			}
-
-			return article;
+			else
+			{
+				logger.Info($"Found article with external ID: \"{externalId}\"");
+			}
 		}
 	}
 

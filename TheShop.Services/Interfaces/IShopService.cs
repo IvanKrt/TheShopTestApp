@@ -7,5 +7,7 @@ namespace TheShop.Services
 		void OrderAndSellArticle(int id, int maxExpectedPrice, int buyerId);
 
 		Article GetById(int id);
+
+		void ShowArticleByExternalId(int externalId);
 	}
 }

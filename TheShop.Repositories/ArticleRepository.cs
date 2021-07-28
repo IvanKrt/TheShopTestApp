@@ -27,7 +27,7 @@ namespace TheShop.Repositories
 			DBContext.Articles.Add(new Article
 			{
 				Id = ++lastId,
-				ArticleCode = article.ArticleCode,
+				ExternalId = article.ExternalId,
 				Price = article.Price,
 				SupplierId = article.SupplierId,
 				Name = article.Name
@@ -39,6 +39,11 @@ namespace TheShop.Repositories
 		public override Article GetById(int id)
 		{
 			return DBContext.Articles.FirstOrDefault(_ => _.Id == id);
+		}
+
+		public Article GetByExternalId(int externalId)
+		{
+			return DBContext.Articles.FirstOrDefault(_ => _.ExternalId == externalId);
 		}
 	}
 }

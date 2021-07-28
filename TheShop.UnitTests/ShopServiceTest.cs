@@ -41,7 +41,7 @@ namespace TheShop.UnitTests
 
 			Assert.IsTrue(addedArticle != null);
 			Assert.IsTrue(addedArticle.BuyerUserId == 10);
-			Assert.IsTrue(addedArticle.ArticleCode == articleFromSupplier.ID);
+			Assert.IsTrue(addedArticle.ExternalId == articleFromSupplier.ID);
 			Assert.IsTrue(addedArticle.Price == articleFromSupplier.ArticlePrice);
 			Assert.IsTrue(addedArticle.SupplierId == 1);
 			Assert.IsTrue(addedArticle.Name == articleFromSupplier.Name_of_article);
@@ -62,7 +62,7 @@ namespace TheShop.UnitTests
 			var createdArticle = new Article
 			{
 				Id = 2,
-				ArticleCode = 1,
+				ExternalId = 1,
 				Name = "Article from supplier 2",
 				Price = 459,
 				IsSold = true,
