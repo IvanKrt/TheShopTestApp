@@ -5,6 +5,8 @@ using System.IO;
 using TheShop.Models.Entities;
 using TheShop.Models.RequestModels;
 using TheShop.Repositories.Interfaces;
+using TheShop.Services.Interfaces;
+using TheShop.UnitTests.Utils.TestData;
 
 namespace TheShop.UnitTests
 {
@@ -12,31 +14,30 @@ namespace TheShop.UnitTests
 	public class ShopServiceTest
 	{
 		private Mock<IArticleRepository> _articleRepository;
+		private Mock<ISupplierApiService> _supplierApiService;
 
 		[TestInitialize]
 		public void Initialize()
 		{
 			_articleRepository = new Mock<IArticleRepository>();
+			_supplierApiService = new Mock<ISupplierApiService>();
 		}
 
 		[TestMethod]
 		public void OrderAndSellArticle_Sucess()
 		{
-			var articleFromSupplier = new ArticleModel
-			{
-				ID = 1,
-				Name_of_article = "Article from supplier1",
-				ArticlePrice = 458
-			};
+			var articleFromSupplier = TestArticleModels.ArticleModel(1, "Article from supplier1", 458);
 
-			Article addedArticle = null;
+			 Article addedArticle = null;
 
 			_articleRepository.Setup(m => m.Create(It.IsAny<Article>())).Callback<Article>((a) =>
 			{
 				addedArticle = a;
 			});
 
-			var _testedInstance = new ShopService(_articleRepository.Object);
+			_supplierApiService.Setup(m => m.GetSuppliers()).Returns(() => TestSupplierModels.List());
+
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
 
 			_testedInstance.OrderAndSellArticle(1, 459, 10);
 
@@ -52,7 +53,7 @@ namespace TheShop.UnitTests
 		[ExpectedException(typeof(Exception))]
 		public void OrderAndSellArticle_ErrorNoArticle()
 		{
-			var _testedInstance = new ShopService(_articleRepository.Object);
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
 
 			_testedInstance.OrderAndSellArticle(1, 20, 10);
 		}
@@ -60,21 +61,11 @@ namespace TheShop.UnitTests
 		[TestMethod]
 		public void GetById_Sucess()
 		{
-			var createdArticle = new Article
-			{
-				Id = 2,
-				ExternalId = 1,
-				Name = "Article from supplier 2",
-				Price = 459,
-				IsSold = true,
-				SoldDate = DateTime.Now,
-				BuyerUserId = 10,
-				SupplierId = 2
-			};
+			var createdArticle = TestArticles.Valid();
 
 			_articleRepository.Setup(m => m.GetById(It.IsAny<int>())).Returns(() => createdArticle);
 
-			var _testedInstance = new ShopService(_articleRepository.Object);
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
 
 			var article = _testedInstance.GetById(2);
 
@@ -91,7 +82,7 @@ namespace TheShop.UnitTests
 
 			_articleRepository.Setup(m => m.GetById(It.IsAny<int>())).Returns(() => existedArticle);
 
-			var _testedInstance = new ShopService(_articleRepository.Object);
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
 
 			var article = _testedInstance.GetById(55);
 
@@ -105,21 +96,11 @@ namespace TheShop.UnitTests
 			{
 				Console.SetOut(sw);
 
-				var createdArticle = new Article
-				{
-					Id = 2,
-					ExternalId = 1,
-					Name = "Article from supplier 2",
-					Price = 459,
-					IsSold = true,
-					SoldDate = DateTime.Now,
-					BuyerUserId = 10,
-					SupplierId = 2
-				};
+				var createdArticle = TestArticles.Valid();
 
 				_articleRepository.Setup(m => m.GetByExternalId(It.IsAny<int>())).Returns(() => createdArticle);
 
-				var _testedInstance = new ShopService(_articleRepository.Object);
+				var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
 
 				_testedInstance.ShowArticleByExternalId(1);
 
@@ -138,7 +119,7 @@ namespace TheShop.UnitTests
 
 				_articleRepository.Setup(m => m.GetByExternalId(It.IsAny<int>())).Returns(() => createdArticle);
 
-				var _testedInstance = new ShopService(_articleRepository.Object);
+				var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
 
 				_testedInstance.ShowArticleByExternalId(1);
 

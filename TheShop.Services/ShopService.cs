@@ -58,6 +58,11 @@ namespace TheShop
 		{
 			var suppliers = _supplierApiService.GetSuppliers();
 
+			if (suppliers == null || suppliers.Count == 0)
+			{
+				return null;
+			}
+
 			var valuableArticleList = suppliers
 				.SelectMany(_ => _.Articles)
 				.Where(_ => _.ID == externalId && _.ArticlePrice <= maxExpectedPrice).ToList();
@@ -71,7 +76,7 @@ namespace TheShop
 
 			if (article == null)
 			{
-				logger.Error("Article from supplyer has invalid data.");
+				logger.Error("Article from supplier has invalid data.");
 				return null;
 			}
 
