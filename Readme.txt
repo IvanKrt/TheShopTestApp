@@ -1,5 +1,3 @@
-# TheShopTestApp
- 
 This is a refactoring exercise in C#. Imagine that this is a part of larger enterprise system and you are given this code to do code review before this goes to production. 
 Please apply every principle and practice that you would in real situation so that this solution satisfies all of the coding standards.
 Code is really simple. There's a ShopService that has the ability to display, order and sell the items. 
