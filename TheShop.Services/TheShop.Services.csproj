@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IShopService.cs" />
+    <Compile Include="Interfaces\ISupplierApiService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShopService.cs" />
+    <Compile Include="SupplierApiService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TheShop.Models\TheShop.Models.csproj">

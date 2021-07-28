@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Linq;
 using TheShop.Models.Entities;
-using TheShop.Models.RequestModels;
 using TheShop.Repositories.Interfaces;
 using TheShop.Services;
+using TheShop.Services.Interfaces;
 
 namespace TheShop
 {
@@ -11,17 +12,16 @@ namespace TheShop
 		private IArticleRepository _articleRepository;
 		private Logger logger;
 
-		private Supplier1Model Supplier1;
-		private Supplier2Model Supplier2;
-		private Supplier3Model Supplier3;
+		private ISupplierApiService _supplierApiService;
 
-		public ShopService(IArticleRepository articleRepository)
+		public ShopService(
+			IArticleRepository articleRepository,
+			ISupplierApiService supplierApiService
+			)
 		{
 			_articleRepository = articleRepository;
 			logger = new Logger();
-			Supplier1 = new Supplier1Model();
-			Supplier2 = new Supplier2Model();
-			Supplier3 = new Supplier3Model();
+			_supplierApiService = supplierApiService;
 		}
 
 		public void OrderAndSellArticle(int externalId, int maxExpectedPrice, int buyerId)
@@ -56,35 +56,24 @@ namespace TheShop
 
 		private Article OrderArticle(int externalId, int maxExpectedPrice)
 		{
-			Article article = null;
-			Article tempArticle = null;
-			var articleExists = Supplier1.ArticleInInventory(externalId);
-			if (articleExists)
+			var suppliers = _supplierApiService.GetSuppliers();
+
+			var valuableArticleList = suppliers
+				.SelectMany(_ => _.Articles)
+				.Where(_ => _.ID == externalId && _.ArticlePrice <= maxExpectedPrice).ToList();
+
+			if (valuableArticleList.Count == 0)
 			{
-				tempArticle = Supplier1.GetArticle(externalId).ConvertToArticle();
-				if (maxExpectedPrice < tempArticle.Price)
-				{
-					articleExists = Supplier2.ArticleInInventory(externalId);
-					if (articleExists)
-					{
-						tempArticle = Supplier2.GetArticle(externalId).ConvertToArticle();
-						if (maxExpectedPrice < tempArticle.Price)
-						{
-							articleExists = Supplier3.ArticleInInventory(externalId);
-							if (articleExists)
-							{
-								tempArticle = Supplier3.GetArticle(externalId).ConvertToArticle();
-								if (maxExpectedPrice < tempArticle.Price)
-								{
-									article = tempArticle;
-								}
-							}
-						}
-					}
-				}
+				return null;
 			}
 
-			article = tempArticle;
+			var article = valuableArticleList.FirstOrDefault().ConvertToArticle();
+
+			if (article == null)
+			{
+				logger.Error("Article from supplyer has invalid data.");
+				return null;
+			}
 
 			return article;
 		}

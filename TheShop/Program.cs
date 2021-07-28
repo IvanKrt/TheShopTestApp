@@ -9,7 +9,10 @@ namespace TheShop
 	{
 		private static void Main(string[] args)
 		{
-			IShopService shopService = new ShopService(new ArticleRepository(new DBContext()));
+			IShopService shopService = new ShopService(
+				new ArticleRepository(new DBContext()),
+				new SupplierApiService()
+				);
 
 			try
 			{
