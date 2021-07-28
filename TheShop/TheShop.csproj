@@ -51,6 +51,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TheShop.Models\TheShop.Models.csproj">
+      <Project>{CA13118C-C027-413A-8634-C3476A7A4BF6}</Project>
+      <Name>TheShop.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TheShop.Services\TheShop.Services.csproj">
       <Project>{3295ABCD-7165-4035-A688-EDCE02666A60}</Project>
       <Name>TheShop.Services</Name>
