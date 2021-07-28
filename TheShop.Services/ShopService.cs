@@ -6,7 +6,7 @@ using TheShop.Services;
 
 namespace TheShop
 {
-	public class ShopService: IShopService
+	public class ShopService : IShopService
 	{
 		private IArticleRepository _articleRepository;
 		private Logger logger;
@@ -14,7 +14,7 @@ namespace TheShop
 		private Supplier1Model Supplier1;
 		private Supplier2Model Supplier2;
 		private Supplier3Model Supplier3;
-		
+
 		public ShopService(IArticleRepository articleRepository)
 		{
 			_articleRepository = articleRepository;
@@ -24,69 +24,15 @@ namespace TheShop
 			Supplier3 = new Supplier3Model();
 		}
 
-		public void OrderAndSellArticle(int id, int maxExpectedPrice, int buyerId)
+		public void OrderAndSellArticle(int externalId, int maxExpectedPrice, int buyerId)
 		{
-			#region ordering article
-
-			Article article = null;
-			Article tempArticle = null;
-			var articleExists = Supplier1.ArticleInInventory(id);
-			if (articleExists)
-			{
-				tempArticle = Supplier1.GetArticle(id).ConvertToArticle();
-				if (maxExpectedPrice < tempArticle.Price)
-				{
-					articleExists = Supplier2.ArticleInInventory(id);
-					if (articleExists)
-					{
-						tempArticle = Supplier2.GetArticle(id).ConvertToArticle();
-						if (maxExpectedPrice < tempArticle.Price)
-						{
-							articleExists = Supplier3.ArticleInInventory(id);
-							if (articleExists)
-							{
-								tempArticle = Supplier3.GetArticle(id).ConvertToArticle();
-								if (maxExpectedPrice < tempArticle.Price)
-								{
-									article = tempArticle;
-								}
-							}
-						}
-					}
-				}
-			}
-			
-			article = tempArticle;
-			#endregion
-
-			#region selling article
-
+			var article = OrderArticle(externalId, maxExpectedPrice);
 			if (article == null)
 			{
 				throw new Exception("Could not order article");
 			}
 
-			logger.Debug("Trying to sell article with id=" + id);
-
-			article.IsSold = true;
-			article.SoldDate = DateTime.Now;
-			article.BuyerUserId = buyerId;
-			
-			try
-			{
-				_articleRepository.Create(article);
-				logger.Info("Article with id=" + id + " is sold.");
-			}
-			catch (ArgumentNullException ex)
-			{
-				logger.Error("Could not save article with id=" + id);
-				throw new Exception("Could not save article with id");
-			}
-			catch (Exception)
-			{
-			}
-
-			#endregion
+			SellArticle(article, buyerId, externalId);
 		}
 
 		public Article GetById(int id)
@@ -105,6 +51,64 @@ namespace TheShop
 			else
 			{
 				logger.Info($"Found article with external ID: \"{externalId}\"");
+			}
+		}
+
+		private Article OrderArticle(int externalId, int maxExpectedPrice)
+		{
+			Article article = null;
+			Article tempArticle = null;
+			var articleExists = Supplier1.ArticleInInventory(externalId);
+			if (articleExists)
+			{
+				tempArticle = Supplier1.GetArticle(externalId).ConvertToArticle();
+				if (maxExpectedPrice < tempArticle.Price)
+				{
+					articleExists = Supplier2.ArticleInInventory(externalId);
+					if (articleExists)
+					{
+						tempArticle = Supplier2.GetArticle(externalId).ConvertToArticle();
+						if (maxExpectedPrice < tempArticle.Price)
+						{
+							articleExists = Supplier3.ArticleInInventory(externalId);
+							if (articleExists)
+							{
+								tempArticle = Supplier3.GetArticle(externalId).ConvertToArticle();
+								if (maxExpectedPrice < tempArticle.Price)
+								{
+									article = tempArticle;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			article = tempArticle;
+
+			return article;
+		}
+
+		private void SellArticle(Article article, int buyerId, int externalId)
+		{
+			logger.Debug("Trying to sell article with external Id=" + externalId);
+
+			article.IsSold = true;
+			article.SoldDate = DateTime.Now;
+			article.BuyerUserId = buyerId;
+
+			try
+			{
+				_articleRepository.Create(article);
+				logger.Info("Article with external id=" + externalId + " is sold.");
+			}
+			catch (ArgumentNullException ex)
+			{
+				logger.Error("Could not save article with external id=" + externalId);
+				throw new Exception("Could not save article with external id");
+			}
+			catch (Exception)
+			{
 			}
 		}
 	}
