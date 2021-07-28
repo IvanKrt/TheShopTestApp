@@ -12,6 +12,8 @@ namespace TheShop.Repositories
 			DBContext = context;
 		}
 
+		protected abstract int GetLastId();
+
 		public IDBContext DBContext { get; set; }
 
 		public virtual int Create(TEntity entity)

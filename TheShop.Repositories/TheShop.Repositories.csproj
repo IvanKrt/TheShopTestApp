@@ -41,9 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArticleRepository.cs" />
     <Compile Include="BaseRepository.cs" />
     <Compile Include="Context\DBContext.cs" />
     <Compile Include="Context\IDBContext.cs" />
+    <Compile Include="Interfaces\IArticleRepository.cs" />
     <Compile Include="Interfaces\IBaseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
