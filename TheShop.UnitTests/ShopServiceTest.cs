@@ -30,7 +30,7 @@ namespace TheShop.UnitTests
 		{
 			_supplierApiService.Setup(m => m.GetSuppliers()).Returns(() => TestSupplierModels.List());
 
-			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
 			_testedInstance.OrderAndSellArticle(1, 459, 10);
 
