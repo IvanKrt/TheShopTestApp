@@ -22,11 +22,16 @@ namespace TheShop.UnitTests
 		[TestMethod]
 		public void OrderAndSellArticle_Sucess()
 		{
+			var supplierId = 1;
+			var buyerId = 10;
+			var articleId = 1;
+			var maxExpecgedPrice = 459;
+
 			var articleFromSupplier = new ArticleModel
 			{
-				ID = 1,
-				Name_of_article = "Article from supplier1",
-				ArticlePrice = 458
+				ID = articleId,
+				Name_of_article = $"Article from supplier{supplierId}",
+				ArticlePrice = maxExpecgedPrice - 1
 			};
 
 			Article addedArticle = null;
@@ -38,31 +43,32 @@ namespace TheShop.UnitTests
 
 			var _testedInstance = new ShopService(_articleRepository.Object);
 
-			_testedInstance.OrderAndSellArticle(1, 459, 10);
+			_testedInstance.OrderAndSellArticle(articleId, maxExpecgedPrice, buyerId);
 
-			Assert.IsTrue(addedArticle != null);
-			Assert.IsTrue(addedArticle.BuyerUserId == 10);
-			Assert.IsTrue(addedArticle.ExternalId == articleFromSupplier.ID);
-			Assert.IsTrue(addedArticle.Price == articleFromSupplier.ArticlePrice);
-			Assert.IsTrue(addedArticle.SupplierId == 1);
-			Assert.IsTrue(addedArticle.Name == articleFromSupplier.Name_of_article);
+			Assert.IsNotNull(addedArticle);
+			Assert.AreEqual(buyerId, addedArticle.BuyerUserId);
+			Assert.AreEqual(articleFromSupplier.ID, addedArticle.ExternalId);
+			Assert.AreEqual(articleFromSupplier.ArticlePrice, addedArticle.Price);
+			Assert.AreEqual(supplierId, addedArticle.SupplierId);
+			Assert.AreEqual(articleFromSupplier.Name_of_article, addedArticle.Name);
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(Exception))]
 		public void OrderAndSellArticle_ErrorNoArticle()
 		{
 			var _testedInstance = new ShopService(_articleRepository.Object);
 
-			_testedInstance.OrderAndSellArticle(1, 20, 10);
+			Assert.ThrowsException<Exception>(() => _testedInstance.OrderAndSellArticle(1, 20, 10));
 		}
 
 		[TestMethod]
 		public void GetById_Sucess()
 		{
+			var articleId = 2;
+
 			var createdArticle = new Article
 			{
-				Id = 2,
+				Id = articleId,
 				ExternalId = 1,
 				Name = "Article from supplier 2",
 				Price = 459,
@@ -76,12 +82,12 @@ namespace TheShop.UnitTests
 
 			var _testedInstance = new ShopService(_articleRepository.Object);
 
-			var article = _testedInstance.GetById(2);
+			var article = _testedInstance.GetById(articleId);
 
-			Assert.IsTrue(article != null);
-			Assert.IsTrue(article.Name == createdArticle.Name);
-			Assert.IsTrue(article.Price == createdArticle.Price);
-			Assert.IsTrue(article.SupplierId == createdArticle.SupplierId);
+			Assert.IsNotNull(article);
+			Assert.AreEqual(createdArticle.Name, article.Name);
+			Assert.AreEqual(createdArticle.Price, article.Price);
+			Assert.AreEqual(createdArticle.SupplierId, article.SupplierId);
 		}
 
 		[TestMethod]
@@ -95,7 +101,7 @@ namespace TheShop.UnitTests
 
 			var article = _testedInstance.GetById(55);
 
-			Assert.IsTrue(article == null);
+			Assert.IsNull(article);
 		}
 
 		[TestMethod]
