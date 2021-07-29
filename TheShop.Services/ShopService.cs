@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using TheShop.Models.Entities;
 using TheShop.Models.RequestModels;
+using TheShop.Repositories.Interfaces;
 using TheShop.Services;
 
 namespace TheShop
 {
 	public class ShopService: IShopService
 	{
-		private DatabaseDriver DatabaseDriver;
+		private IArticleRepository _articleRepository;
 		private Logger logger;
 
 		private Supplier1Model Supplier1;
 		private Supplier2Model Supplier2;
 		private Supplier3Model Supplier3;
 		
-		public ShopService()
+		public ShopService(IArticleRepository articleRepository)
 		{
-			DatabaseDriver = new DatabaseDriver();
+			_articleRepository = articleRepository;
 			logger = new Logger();
 			Supplier1 = new Supplier1Model();
 			Supplier2 = new Supplier2Model();
@@ -75,7 +74,7 @@ namespace TheShop
 			
 			try
 			{
-				DatabaseDriver.Save(article);
+				_articleRepository.Create(article);
 				logger.Info("Article with id=" + id + " is sold.");
 			}
 			catch (ArgumentNullException ex)
@@ -92,23 +91,14 @@ namespace TheShop
 
 		public Article GetById(int id)
 		{
-			return DatabaseDriver.GetById(id);
-		}
-	}
+			var article = _articleRepository.GetById(id);
 
-	//in memory implementation
-	public class DatabaseDriver
-	{
-		private List<Article> _articles = new List<Article>();
+			if (article == null)
+			{
+				throw new Exception("Article not found");
+			}
 
-		public Article GetById(int id)
-		{
-            return _articles.Single(x => x.Id == id);
-		}
-
-		public void Save(Article article)
-		{
-			_articles.Add(article);
+			return article;
 		}
 	}
 

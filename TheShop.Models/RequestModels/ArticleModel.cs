@@ -23,7 +23,6 @@ namespace TheShop.Models.RequestModels
 
 			return new Article()
 			{
-				Id = ID,
 				ArticleCode = ID,
 				Price = ArticlePrice,
 				SupplierId = supplierId,

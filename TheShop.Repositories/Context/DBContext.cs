@@ -3,7 +3,7 @@ using TheShop.Models.Entities;
 
 namespace TheShop.Repositories.Context
 {
-	public class DBContext
+	public class DBContext: IDBContext
 	{
 		public List<Article> Articles { get; set; }
 

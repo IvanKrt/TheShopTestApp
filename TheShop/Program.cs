@@ -1,4 +1,6 @@
 ﻿using System;
+using TheShop.Repositories;
+using TheShop.Repositories.Context;
 using TheShop.Services;
 
 namespace TheShop
@@ -7,7 +9,7 @@ namespace TheShop
 	{
 		private static void Main(string[] args)
 		{
-			IShopService shopService = new ShopService();
+			IShopService shopService = new ShopService(new ArticleRepository(new DBContext()));
 
 			try
 			{
