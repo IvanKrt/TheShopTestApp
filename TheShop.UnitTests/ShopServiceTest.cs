@@ -26,9 +26,26 @@ namespace TheShop.UnitTests
 		}
 
 		[TestMethod]
+		public void OrderAndSellArticle_VerifyGetSuppliersCalled()
+		{
+			_supplierApiService.Setup(m => m.GetSuppliers()).Returns(() => TestSupplierModels.List());
+
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
+
+			_testedInstance.OrderAndSellArticle(1, 459, 10);
+
+			_supplierApiService.Verify(mock => mock.GetSuppliers(), Times.Once());
+		}
+
+		[TestMethod]
 		public void OrderAndSellArticle_Sucess()
 		{
-			var articleFromSupplier = TestArticleModels.ArticleModel(1, "Article from supplier1", 458);
+			var supplierId = 1;
+			var buyerId = 10;
+			var articleId = 1;
+			var maxExpecgedPrice = 459;
+			var articleName = $"Article from supplier{supplierId}";
+			var articleFromSupplier = TestArticleModels.ArticleModel(articleId, articleName, maxExpecgedPrice - 1);
 
 			 Article addedArticle = null;
 
@@ -41,40 +58,40 @@ namespace TheShop.UnitTests
 
 			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
-			_testedInstance.OrderAndSellArticle(1, 459, 10);
+			_testedInstance.OrderAndSellArticle(articleId, maxExpecgedPrice, buyerId);
 
-			Assert.IsTrue(addedArticle != null);
-			Assert.IsTrue(addedArticle.BuyerUserId == 10);
-			Assert.IsTrue(addedArticle.ExternalId == articleFromSupplier.ID);
-			Assert.IsTrue(addedArticle.Price == articleFromSupplier.ArticlePrice);
-			Assert.IsTrue(addedArticle.SupplierId == 1);
-			Assert.IsTrue(addedArticle.Name == articleFromSupplier.Name_of_article);
+			Assert.IsNotNull(addedArticle);
+			Assert.AreEqual(buyerId, addedArticle.BuyerUserId);
+			Assert.AreEqual(articleFromSupplier.ID, addedArticle.ExternalId);
+			Assert.AreEqual(articleFromSupplier.ArticlePrice, addedArticle.Price);
+			Assert.AreEqual(supplierId, addedArticle.SupplierId);
+			Assert.AreEqual(articleFromSupplier.Name_of_article, addedArticle.Name);
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(Exception))]
 		public void OrderAndSellArticle_ErrorNoArticle()
 		{
 			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
-			_testedInstance.OrderAndSellArticle(1, 20, 10);
+			Assert.ThrowsException<Exception>(() => _testedInstance.OrderAndSellArticle(1, 20, 10));
 		}
 
 		[TestMethod]
 		public void GetById_Sucess()
 		{
-			var createdArticle = TestArticles.Valid();
+			var articleId = 2;
+			var createdArticle = TestArticles.Valid(articleId);
 
 			_articleRepository.Setup(m => m.GetById(It.IsAny<int>())).Returns(() => createdArticle);
 
 			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
-			var article = _testedInstance.GetById(2);
+			var article = _testedInstance.GetById(articleId);
 
-			Assert.IsTrue(article != null);
-			Assert.IsTrue(article.Name == createdArticle.Name);
-			Assert.IsTrue(article.Price == createdArticle.Price);
-			Assert.IsTrue(article.SupplierId == createdArticle.SupplierId);
+			Assert.IsNotNull(article);
+			Assert.AreEqual(createdArticle.Name, article.Name);
+			Assert.AreEqual(createdArticle.Price, article.Price);
+			Assert.AreEqual(createdArticle.SupplierId, article.SupplierId);
 		}
 
 		[TestMethod]
@@ -88,7 +105,7 @@ namespace TheShop.UnitTests
 
 			var article = _testedInstance.GetById(55);
 
-			Assert.IsTrue(article == null);
+			Assert.IsNull(article);
 		}
 
 		[TestMethod]
@@ -98,13 +115,15 @@ namespace TheShop.UnitTests
 			{
 				Console.SetOut(sw);
 
-				var createdArticle = TestArticles.Valid();
+				var articleId = 2;
+
+				var createdArticle = TestArticles.Valid(articleId);
 
 				_articleRepository.Setup(m => m.GetByExternalId(It.IsAny<int>())).Returns(() => createdArticle);
 
 				var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
-				_testedInstance.ShowArticleByExternalId(1);
+				_testedInstance.ShowArticleByExternalId(articleId);
 
 				Assert.IsTrue(sw.ToString().Contains("Found article"));
 			}
