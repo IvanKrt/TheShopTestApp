@@ -39,12 +39,12 @@ namespace TheShop.UnitTests
 
 			_testedInstance.OrderAndSellArticle(1, 459, 10);
 
-			Assert.IsTrue(addedArticle != null);
-			Assert.IsTrue(addedArticle.BuyerUserId == 10);
-			Assert.IsTrue(addedArticle.ArticleCode == articleFromSupplier.ID);
-			Assert.IsTrue(addedArticle.Price == articleFromSupplier.ArticlePrice);
-			Assert.IsTrue(addedArticle.SupplierId == 1);
-			Assert.IsTrue(addedArticle.Name == articleFromSupplier.Name_of_article);
+			Assert.IsNotNull(addedArticle);
+			Assert.AreEqual(10, addedArticle.BuyerUserId);
+			Assert.AreEqual(articleFromSupplier.ID, addedArticle.ArticleCode);
+			Assert.AreEqual(articleFromSupplier.ArticlePrice, addedArticle.Price);
+			Assert.AreEqual(1, addedArticle.SupplierId);
+			Assert.AreEqual(articleFromSupplier.Name_of_article, addedArticle.Name);
 		}
 
 		[TestMethod]
@@ -77,10 +77,10 @@ namespace TheShop.UnitTests
 
 			var article = _testedInstance.GetById(2);
 
-			Assert.IsTrue(article != null);
-			Assert.IsTrue(article.Name == createdArticle.Name);
-			Assert.IsTrue(article.Price == createdArticle.Price);
-			Assert.IsTrue(article.SupplierId == createdArticle.SupplierId);
+			Assert.IsNotNull(article);
+			Assert.AreEqual(createdArticle.Name, article.Name);
+			Assert.AreEqual(createdArticle.Price, article.Price);
+			Assert.AreEqual(createdArticle.SupplierId, article.SupplierId);
 		}
 
 		[TestMethod]
@@ -94,7 +94,7 @@ namespace TheShop.UnitTests
 
 			var article = _testedInstance.GetById(55);
 
-			Assert.IsTrue(article == null);
+			Assert.IsNull(article);
 		}
 	}
 }
