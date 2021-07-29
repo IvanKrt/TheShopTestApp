@@ -10,17 +10,17 @@ namespace TheShop
 	public class ShopService : IShopService
 	{
 		private IArticleRepository _articleRepository;
-		private Logger logger;
-
+		private ILoggerService _logger;
 		private ISupplierApiService _supplierApiService;
 
 		public ShopService(
 			IArticleRepository articleRepository,
-			ISupplierApiService supplierApiService
+			ISupplierApiService supplierApiService,
+			ILoggerService logger
 			)
 		{
 			_articleRepository = articleRepository;
-			logger = new Logger();
+			_logger = logger;
 			_supplierApiService = supplierApiService;
 		}
 
@@ -46,11 +46,11 @@ namespace TheShop
 
 			if (article == null)
 			{
-				logger.Info($"Article with external ID \"{externalId}\" not found");
+				_logger.Info($"Article with external ID \"{externalId}\" not found");
 			}
 			else
 			{
-				logger.Info($"Found article with external ID: \"{externalId}\"");
+				_logger.Info($"Found article with external ID: \"{externalId}\"");
 			}
 		}
 
@@ -76,7 +76,7 @@ namespace TheShop
 
 			if (article == null)
 			{
-				logger.Error("Article from supplier has invalid data.");
+				_logger.Error("Article from supplier has invalid data.");
 				return null;
 			}
 
@@ -85,43 +85,14 @@ namespace TheShop
 
 		private void SellArticle(Article article, int buyerId, int externalId)
 		{
-			logger.Debug("Trying to sell article with external Id=" + externalId);
+			_logger.Debug("Trying to sell article with external Id=" + externalId);
 
 			article.IsSold = true;
 			article.SoldDate = DateTime.Now;
 			article.BuyerUserId = buyerId;
 
-			try
-			{
-				_articleRepository.Create(article);
-				logger.Info("Article with external id=" + externalId + " is sold.");
-			}
-			catch (ArgumentNullException ex)
-			{
-				logger.Error("Could not save article with external id=" + externalId);
-				throw new Exception("Could not save article with external id");
-			}
-			catch (Exception)
-			{
-			}
-		}
-	}
-
-	public class Logger
-	{
-		public void Info(string message)
-		{
-			Console.WriteLine("Info: " + message);
-		}
-
-		public void Error(string message)
-		{
-			Console.WriteLine("Error: " + message);
-		}
-
-		public void Debug(string message)
-		{
-			Console.WriteLine("Debug: " + message);
+			_articleRepository.Create(article);
+			_logger.Info("Article with external id=" + externalId + " is sold.");
 		}
 	}
 }

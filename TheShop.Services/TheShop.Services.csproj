@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleLoggerService.cs" />
+    <Compile Include="Interfaces\ILoggerService.cs" />
     <Compile Include="Interfaces\IShopService.cs" />
     <Compile Include="Interfaces\ISupplierApiService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

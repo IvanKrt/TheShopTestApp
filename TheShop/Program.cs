@@ -11,7 +11,8 @@ namespace TheShop
 		{
 			IShopService shopService = new ShopService(
 				new ArticleRepository(new DBContext()),
-				new SupplierApiService()
+				new SupplierApiService(),
+				new ConsoleLoggerService()
 				);
 
 			try
