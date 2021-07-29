@@ -5,11 +5,11 @@ namespace TheShop.UnitTests.Utils.TestData
 {
 	public static class TestArticles
 	{
-		public static Article Valid()
+		public static Article Valid(int articleId)
 		{
 			return new Article
 			{
-				Id = 2,
+				Id = articleId,
 				ExternalId = 1,
 				Name = "Article from supplier 2",
 				Price = 459,

@@ -34,16 +34,11 @@ namespace TheShop.Models.RequestModels
 		{
 			var idAsArrayString = new StringBuilder();
 
-			for (int i = Name_of_article.Length - 1; i >= 0; i--)
+			int i = Name_of_article.Length - 1;
+
+			while (Char.IsDigit(Name_of_article[i]))
 			{
-				if (Char.IsDigit(Name_of_article[i]))
-				{
-					idAsArrayString.Insert(0, Name_of_article[i]);
-				}
-				else
-				{
-					break;
-				}
+				idAsArrayString.Insert(0, Name_of_article[i--]);
 			}
 
 			return Int32.TryParse(idAsArrayString.ToString(), out int result) ? result : 0;
