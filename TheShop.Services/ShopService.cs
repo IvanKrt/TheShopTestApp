@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TheShop.Services;
 
 namespace TheShop
 {
-	public class ShopService
+	public class ShopService: IShopService
 	{
 		private DatabaseDriver DatabaseDriver;
 		private Logger logger;

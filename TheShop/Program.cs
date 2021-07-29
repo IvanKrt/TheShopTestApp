@@ -1,4 +1,5 @@
 ﻿using System;
+using TheShop.Services;
 
 namespace TheShop
 {
@@ -6,7 +7,7 @@ namespace TheShop
 	{
 		private static void Main(string[] args)
 		{
-			var shopService = new ShopService();
+			IShopService shopService = new ShopService();
 
 			try
 			{
