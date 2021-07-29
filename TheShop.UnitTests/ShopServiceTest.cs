@@ -53,12 +53,11 @@ namespace TheShop.UnitTests
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(Exception))]
 		public void OrderAndSellArticle_ErrorNoArticle()
 		{
 			var _testedInstance = new ShopService(_articleRepository.Object);
 
-			_testedInstance.OrderAndSellArticle(1, 20, 10);
+			Assert.ThrowsException<Exception>(() => _testedInstance.OrderAndSellArticle(1, 20, 10));
 		}
 
 		[TestMethod]
