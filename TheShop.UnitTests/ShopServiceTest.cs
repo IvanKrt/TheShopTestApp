@@ -23,12 +23,14 @@ namespace TheShop.UnitTests
 		{
 			var supplierId = 1;
 			var buyerId = 10;
+			var articleId = 1;
+			var maxExpecgedPrice = 459;
 
 			var articleFromSupplier = new ArticleModel
 			{
-				ID = 1,
+				ID = articleId,
 				Name_of_article = $"Article from supplier{supplierId}",
-				ArticlePrice = 458
+				ArticlePrice = maxExpecgedPrice - 1
 			};
 
 			Article addedArticle = null;
@@ -40,7 +42,7 @@ namespace TheShop.UnitTests
 
 			var _testedInstance = new ShopService(_articleRepository.Object);
 
-			_testedInstance.OrderAndSellArticle(1, 459, buyerId);
+			_testedInstance.OrderAndSellArticle(articleId, maxExpecgedPrice, buyerId);
 
 			Assert.IsNotNull(addedArticle);
 			Assert.AreEqual(buyerId, addedArticle.BuyerUserId);
