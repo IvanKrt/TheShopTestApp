@@ -45,9 +45,7 @@
     <Compile Include="Entities\Article.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestModels\ArticleModel.cs" />
-    <Compile Include="RequestModels\Supplier1Model.cs" />
-    <Compile Include="RequestModels\Supplier2Model.cs" />
-    <Compile Include="RequestModels\Supplier3Model.cs" />
+    <Compile Include="RequestModels\SupplierModel.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
