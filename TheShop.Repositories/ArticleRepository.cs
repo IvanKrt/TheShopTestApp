@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TheShop.Models.Entities;
 using TheShop.Repositories.Context;
 using TheShop.Repositories.Interfaces;
@@ -39,6 +40,28 @@ namespace TheShop.Repositories
 		public override Article GetById(int id)
 		{
 			return DBContext.Articles.FirstOrDefault(_ => _.Id == id);
+		}
+
+		public override void Remove(int id)
+		{
+			var articleToRemove = DBContext.Articles.FirstOrDefault(_ => _.Id == id);
+			DBContext.Articles.Remove(articleToRemove);
+		}
+
+		public override bool Update(Article article)
+		{
+			var existingArticle =  DBContext.Articles.FirstOrDefault(_ => _.Id == article.Id);
+
+			existingArticle.IsSold = article.IsSold;
+			existingArticle.SoldDate = article.SoldDate;
+			existingArticle.BuyerUserId = article.BuyerUserId;
+
+			return true;
+		}
+
+		public override IEnumerable<Article> GetAll()
+		{
+			return DBContext.Articles;
 		}
 	}
 }

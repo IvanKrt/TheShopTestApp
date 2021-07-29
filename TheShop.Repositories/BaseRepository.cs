@@ -16,29 +16,14 @@ namespace TheShop.Repositories
 
 		public IDBContext DBContext { get; set; }
 
-		public virtual int Create(TEntity entity)
-		{
-			throw new System.NotImplementedException();
-		}
+		public abstract int Create(TEntity entity);
 
-		public virtual IEnumerable<TEntity> GetAll()
-		{
-			throw new System.NotImplementedException();
-		}
+		public abstract IEnumerable<TEntity> GetAll();
 
-		public virtual TEntity GetById(int id)
-		{
-			throw new System.NotImplementedException();
-		}
+		public abstract TEntity GetById(int id);
 
-		public virtual void Remove(int id)
-		{
-			throw new System.NotImplementedException();
-		}
+		public abstract void Remove(int id);
 
-		public virtual bool Update(TEntity entity)
-		{
-			throw new System.NotImplementedException();
-		}
+		public abstract bool Update(TEntity entity);
 	}
 }
