@@ -6,5 +6,7 @@ TheShop.Services/bin/
 TheShop.Services/obj/
 TheShop.Repositories/bin/
 TheShop.Repositories/obj/
+TheShop.UnitTests/bin/
+TheShop.UnitTests/obj/
 /.vs
 /.packages
