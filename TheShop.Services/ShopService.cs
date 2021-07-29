@@ -96,9 +96,9 @@ namespace TheShop
 
 		public void ShowArticleByExternalId(int externalId)
 		{
-			var articles = _articleRepository.GetByExternalId(externalId);
+			var article = _articleRepository.GetByExternalId(externalId);
 
-			if (articles == null)
+			if (article == null)
 			{
 				logger.Info($"Article with external ID \"{externalId}\" not found");
 			}
