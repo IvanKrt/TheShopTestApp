@@ -21,10 +21,13 @@ namespace TheShop.UnitTests
 		[TestMethod]
 		public void OrderAndSellArticle_Sucess()
 		{
+			var supplierId = 1;
+			var buyerId = 10;
+
 			var articleFromSupplier = new ArticleModel
 			{
 				ID = 1,
-				Name_of_article = "Article from supplier1",
+				Name_of_article = $"Article from supplier{supplierId}",
 				ArticlePrice = 458
 			};
 
@@ -37,13 +40,13 @@ namespace TheShop.UnitTests
 
 			var _testedInstance = new ShopService(_articleRepository.Object);
 
-			_testedInstance.OrderAndSellArticle(1, 459, 10);
+			_testedInstance.OrderAndSellArticle(1, 459, buyerId);
 
 			Assert.IsNotNull(addedArticle);
-			Assert.AreEqual(10, addedArticle.BuyerUserId);
+			Assert.AreEqual(buyerId, addedArticle.BuyerUserId);
 			Assert.AreEqual(articleFromSupplier.ID, addedArticle.ArticleCode);
 			Assert.AreEqual(articleFromSupplier.ArticlePrice, addedArticle.Price);
-			Assert.AreEqual(1, addedArticle.SupplierId);
+			Assert.AreEqual(supplierId, addedArticle.SupplierId);
 			Assert.AreEqual(articleFromSupplier.Name_of_article, addedArticle.Name);
 		}
 
@@ -59,9 +62,11 @@ namespace TheShop.UnitTests
 		[TestMethod]
 		public void GetById_Sucess()
 		{
+			var articleId = 2;
+
 			var createdArticle = new Article
 			{
-				Id = 2,
+				Id = articleId,
 				ArticleCode = 1,
 				Name = "Article from supplier 2",
 				Price = 459,
@@ -75,7 +80,7 @@ namespace TheShop.UnitTests
 
 			var _testedInstance = new ShopService(_articleRepository.Object);
 
-			var article = _testedInstance.GetById(2);
+			var article = _testedInstance.GetById(articleId);
 
 			Assert.IsNotNull(article);
 			Assert.AreEqual(createdArticle.Name, article.Name);
