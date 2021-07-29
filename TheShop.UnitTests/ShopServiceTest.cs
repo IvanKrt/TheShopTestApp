@@ -23,6 +23,18 @@ namespace TheShop.UnitTests
 		}
 
 		[TestMethod]
+		public void OrderAndSellArticle_VerifyGetSuppliersCalled()
+		{
+			_supplierApiService.Setup(m => m.GetSuppliers()).Returns(() => TestSupplierModels.List());
+
+			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object);
+
+			_testedInstance.OrderAndSellArticle(1, 459, 10);
+
+			_supplierApiService.Verify(mock => mock.GetSuppliers(), Times.Once());
+		}
+
+		[TestMethod]
 		public void OrderAndSellArticle_Sucess()
 		{
 			var supplierId = 1;
