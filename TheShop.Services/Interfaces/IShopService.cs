@@ -1,4 +1,6 @@
-﻿namespace TheShop.Services
+﻿using TheShop.Models.Entities;
+
+namespace TheShop.Services
 {
 	public interface  IShopService
 	{
