@@ -28,7 +28,7 @@ namespace TheShop.Repositories
 			DBContext.Articles.Add(new Article
 			{
 				Id = ++lastId,
-				ArticleCode = article.ArticleCode,
+				ExternalId = article.ExternalId,
 				Price = article.Price,
 				SupplierId = article.SupplierId,
 				Name = article.Name
@@ -50,7 +50,7 @@ namespace TheShop.Repositories
 
 		public override bool Update(Article article)
 		{
-			var existingArticle =  DBContext.Articles.FirstOrDefault(_ => _.Id == article.Id);
+			var existingArticle = DBContext.Articles.FirstOrDefault(_ => _.Id == article.Id);
 			var result = existingArticle != null;
 
 			if (result)
@@ -66,6 +66,11 @@ namespace TheShop.Repositories
 		public override IEnumerable<Article> GetAll()
 		{
 			return DBContext.Articles;
+		}
+
+		public Article GetByExternalId(int externalId)
+		{
+			return DBContext.Articles.FirstOrDefault(_ => _.ExternalId == externalId);
 		}
 	}
 }

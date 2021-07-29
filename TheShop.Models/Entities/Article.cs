@@ -5,7 +5,7 @@ namespace TheShop.Models.Entities
 {
 	public class Article : BaseModel
 	{ 
-		public int ArticleCode { get; set; }
+		public int ExternalId { get; set; }
 
 		public string Name { get; set; }
 

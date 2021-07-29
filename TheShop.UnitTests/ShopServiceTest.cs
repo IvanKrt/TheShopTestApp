@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.IO;
 using TheShop.Models.Entities;
 using TheShop.Models.RequestModels;
 using TheShop.Repositories.Interfaces;
@@ -46,7 +47,7 @@ namespace TheShop.UnitTests
 
 			Assert.IsNotNull(addedArticle);
 			Assert.AreEqual(buyerId, addedArticle.BuyerUserId);
-			Assert.AreEqual(articleFromSupplier.ID, addedArticle.ArticleCode);
+			Assert.AreEqual(articleFromSupplier.ID, addedArticle.ExternalId);
 			Assert.AreEqual(articleFromSupplier.ArticlePrice, addedArticle.Price);
 			Assert.AreEqual(supplierId, addedArticle.SupplierId);
 			Assert.AreEqual(articleFromSupplier.Name_of_article, addedArticle.Name);
@@ -68,7 +69,7 @@ namespace TheShop.UnitTests
 			var createdArticle = new Article
 			{
 				Id = articleId,
-				ArticleCode = 1,
+				ExternalId = 1,
 				Name = "Article from supplier 2",
 				Price = 459,
 				IsSold = true,
@@ -101,6 +102,54 @@ namespace TheShop.UnitTests
 			var article = _testedInstance.GetById(55);
 
 			Assert.IsNull(article);
+		}
+
+		[TestMethod]
+		public void ShowArticleByExternalIdInConsole_Sucess()
+		{
+			using (StringWriter sw = new StringWriter())
+			{
+				Console.SetOut(sw);
+
+				var createdArticle = new Article
+				{
+					Id = 2,
+					ExternalId = 1,
+					Name = "Article from supplier 2",
+					Price = 459,
+					IsSold = true,
+					SoldDate = DateTime.Now,
+					BuyerUserId = 10,
+					SupplierId = 2
+				};
+
+				_articleRepository.Setup(m => m.GetByExternalId(It.IsAny<int>())).Returns(() => createdArticle);
+
+				var _testedInstance = new ShopService(_articleRepository.Object);
+
+				_testedInstance.ShowArticleByExternalId(1);
+
+				Assert.IsTrue(sw.ToString().Contains("Found article"));
+			}
+		}
+
+		[TestMethod]
+		public void ShowArticleByExternalIdInConsole_Error()
+		{
+			using (StringWriter sw = new StringWriter())
+			{
+				Console.SetOut(sw);
+
+				Article createdArticle = null;
+
+				_articleRepository.Setup(m => m.GetByExternalId(It.IsAny<int>())).Returns(() => createdArticle);
+
+				var _testedInstance = new ShopService(_articleRepository.Object);
+
+				_testedInstance.ShowArticleByExternalId(1);
+
+				Assert.IsTrue(sw.ToString().Contains("not found"));
+			}
 		}
 	}
 }
