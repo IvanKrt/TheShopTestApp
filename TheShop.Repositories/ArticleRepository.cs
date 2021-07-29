@@ -51,12 +51,16 @@ namespace TheShop.Repositories
 		public override bool Update(Article article)
 		{
 			var existingArticle =  DBContext.Articles.FirstOrDefault(_ => _.Id == article.Id);
+			var result = existingArticle != null;
 
-			existingArticle.IsSold = article.IsSold;
-			existingArticle.SoldDate = article.SoldDate;
-			existingArticle.BuyerUserId = article.BuyerUserId;
+			if (result)
+			{
+				existingArticle.IsSold = article.IsSold;
+				existingArticle.SoldDate = article.SoldDate;
+				existingArticle.BuyerUserId = article.BuyerUserId;
+			}
 
-			return true;
+			return result;
 		}
 
 		public override IEnumerable<Article> GetAll()
