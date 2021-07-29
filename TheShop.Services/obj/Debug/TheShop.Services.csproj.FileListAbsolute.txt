@@ -1,9 +1,0 @@
-C:\Users\artem\source\TheShopTestApp\TheShopTestApp\TheShop.Services\bin\Debug\TheShop.Services.dll
-C:\Users\artem\source\TheShopTestApp\TheShopTestApp\TheShop.Services\bin\Debug\TheShop.Services.pdb
-C:\Users\artem\source\TheShopTestApp\TheShopTestApp\TheShop.Services\obj\Debug\TheShop.Services.csproj.AssemblyReference.cache
-C:\Users\artem\source\TheShopTestApp\TheShopTestApp\TheShop.Services\obj\Debug\TheShop.Services.csproj.CoreCompileInputs.cache
-C:\Users\artem\source\TheShopTestApp\TheShopTestApp\TheShop.Services\obj\Debug\TheShop.Services.dll
-C:\Users\artem\source\TheShopTestApp\TheShopTestApp\TheShop.Services\obj\Debug\TheShop.Services.pdb
-C:\Users\artem\source\TheShopTestApp\TheShopTestApp\TheShop.Services\bin\Debug\TheShop.Models.dll
-C:\Users\artem\source\TheShopTestApp\TheShopTestApp\TheShop.Services\bin\Debug\TheShop.Models.pdb
-C:\Users\artem\source\TheShopTestApp\TheShopTestApp\TheShop.Services\obj\Debug\TheShop.Services.csproj.CopyComplete
