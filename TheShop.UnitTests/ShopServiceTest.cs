@@ -3,6 +3,7 @@ using Moq;
 using System;
 using System.IO;
 using TheShop.Models.Entities;
+using TheShop.Models.Exceptions;
 using TheShop.Repositories.Interfaces;
 using TheShop.Services.Interfaces;
 using TheShop.UnitTests.Utils.TestData;
@@ -73,7 +74,7 @@ namespace TheShop.UnitTests
 		{
 			var _testedInstance = new ShopService(_articleRepository.Object, _supplierApiService.Object, _logger.Object);
 
-			Assert.ThrowsException<Exception>(() => _testedInstance.OrderAndSellArticle(1, 20, 10));
+			Assert.ThrowsException<NoMatchingArticleException>(() => _testedInstance.OrderAndSellArticle(1, 20, 10));
 		}
 
 		[TestMethod]

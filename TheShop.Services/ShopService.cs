@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using TheShop.Models.Entities;
+using TheShop.Models.Exceptions;
 using TheShop.Repositories.Interfaces;
 using TheShop.Services;
 using TheShop.Services.Interfaces;
@@ -29,7 +30,7 @@ namespace TheShop
 			var article = OrderArticle(externalId, maxExpectedPrice);
 			if (article == null)
 			{
-				throw new Exception("Could not order article");
+				throw new NoMatchingArticleException();
 			}
 
 			SellArticle(article, buyerId, externalId);
