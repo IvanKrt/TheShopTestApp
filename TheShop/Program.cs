@@ -1,4 +1,7 @@
 ﻿using System;
+using TheShop.Repositories;
+using TheShop.Repositories.Context;
+using TheShop.Services;
 
 namespace TheShop
 {
@@ -6,11 +9,14 @@ namespace TheShop
 	{
 		private static void Main(string[] args)
 		{
-			var shopService = new ShopService();
+			IShopService shopService = new ShopService(
+				new ArticleRepository(new DBContext()),
+				new SupplierApiService(),
+				new ConsoleLoggerService()
+				);
 
 			try
 			{
-				//order and sell
 				shopService.OrderAndSellArticle(1, 20, 10);
 			}
 			catch (Exception ex)
@@ -18,27 +24,9 @@ namespace TheShop
 				Console.WriteLine(ex);
 			}
 
-			try
-			{
-				//print article on console
-				var article = shopService.GetById(1);
-				Console.WriteLine("Found article with ID: " + article.ID);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Article not found: " + ex);
-			}
+			shopService.ShowArticleByExternalId(1);
 
-			try
-			{
-				//print article on console				
-				var article = shopService.GetById(12);
-				Console.WriteLine("Found article with ID: " + article.ID);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Article not found: " + ex);
-			}
+			shopService.ShowArticleByExternalId(12);
 
 			Console.ReadKey();
 		}

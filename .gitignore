@@ -1,3 +1,12 @@
 TheShop/bin/
 TheShop/obj/
+TheShop.Models/bin/
+TheShop.Models/obj/
+TheShop.Services/bin/
+TheShop.Services/obj/
+TheShop.Repositories/bin/
+TheShop.Repositories/obj/
+TheShop.UnitTests/bin/
+TheShop.UnitTests/obj/
 /.vs
+packages/
